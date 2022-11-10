@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,7 +54,9 @@ serviceDb sdb;
 	public String LoginUser(@RequestParam String stdEmail,@RequestParam String stdpassword,HttpSession session,Model m) {
 		List<stdLog> log=sdb.chkLogStd(stdEmail);
 		if(log.isEmpty()) {
-	return "redirect:login?error";
+			String error="new";
+			m.addAttribute("logError",error);
+	return "redirect:login?logerror";
 	
 		}
 		stdLog logdtl=log.get(0);
@@ -65,7 +67,8 @@ serviceDb sdb;
 				return "profile";
 		}
 		else {
-			return "index";
+			m.addAttribute("logError","logError");
+			return("login");
 		}
 		
 		}
@@ -74,5 +77,11 @@ serviceDb sdb;
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "login";
+	}
+	@RequestMapping("delete/{rolNo}")
+	public String DeleteData(@PathVariable("rolNo") int id,HttpSession session) {
+		sdb.deleteUser(id);
+		session.invalidate();
+		return "index";
 	}
 }
