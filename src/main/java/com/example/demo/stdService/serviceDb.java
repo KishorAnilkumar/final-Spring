@@ -34,6 +34,12 @@ public List<stdLog> getAllDetails() {
 	List<stdLog> alldetail=stdLogInt.findAll();
 	return alldetail;
 }
+public int deleteUser(int id) {
+	// TODO Auto-generated method stub
+	student suStudent=stdInt.findById(id).get();
+	stdLogInt.deleteById(id);
+	return 1;
+}
 
 
 }
